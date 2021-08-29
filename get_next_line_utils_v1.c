@@ -6,7 +6,7 @@
 /*   By: skienzle <skienzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/22 15:32:04 by skienzle          #+#    #+#             */
-/*   Updated: 2021/08/29 22:40:58 by skienzle         ###   ########.fr       */
+/*   Updated: 2021/08/29 21:05:46 by skienzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,18 +24,18 @@ size_t	ft_strlen(const char *str)
 	return (len);
 }
 
-int		ft_strchr_index(const char *str, int c)
+char	*ft_strchr(const char *str, int c)
 {
 	int		i;
 
-	if (!str)
-		return (0);
 	i = 0;
+	if (!str)
+		return (NULL);
 	while (str[i] && (char)c != str[i])
 		i++;
 	if (str[i] == (char)c)
-		return (i);
-	return (0);
+		return ((char *)str + i);
+	return (NULL);
 }
 
 char	*ft_strdup(const char *str)
@@ -44,8 +44,6 @@ char	*ft_strdup(const char *str)
 	size_t	i;
 	char	*dest;
 
-	if (str == NULL)
-		return (NULL);
 	len = ft_strlen(str);
 	dest = (char *)malloc(len + 1);
 	if (!dest)
@@ -60,7 +58,7 @@ char	*ft_strdup(const char *str)
 	return (dest);
 }
 
-char	*ft_strjoin(const char *s1,const char *s2)
+char	*ft_strjoin(char const *s1, char const *s2)
 {
 	size_t	i;
 	size_t	j;
@@ -84,7 +82,7 @@ char	*ft_strjoin(const char *s1,const char *s2)
 	return (new);
 }
 
-char	*ft_substr(const char *s, unsigned int start, size_t len)
+char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
 	size_t	i;
 	size_t	str_len;
