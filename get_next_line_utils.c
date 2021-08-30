@@ -6,7 +6,7 @@
 /*   By: skienzle <skienzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/22 15:32:04 by skienzle          #+#    #+#             */
-/*   Updated: 2021/08/29 22:40:58 by skienzle         ###   ########.fr       */
+/*   Updated: 2021/08/30 12:44:29 by skienzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,20 +22,6 @@ size_t	ft_strlen(const char *str)
 	while (str[len])
 		len++;
 	return (len);
-}
-
-int		ft_strchr_index(const char *str, int c)
-{
-	int		i;
-
-	if (!str)
-		return (0);
-	i = 0;
-	while (str[i] && (char)c != str[i])
-		i++;
-	if (str[i] == (char)c)
-		return (i);
-	return (0);
 }
 
 char	*ft_strdup(const char *str)
@@ -60,7 +46,7 @@ char	*ft_strdup(const char *str)
 	return (dest);
 }
 
-char	*ft_strjoin(const char *s1,const char *s2)
+char	*ft_strjoin(const char *s1, const char *s2)
 {
 	size_t	i;
 	size_t	j;

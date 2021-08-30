@@ -6,7 +6,7 @@
 /*   By: skienzle <skienzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/22 15:31:59 by skienzle          #+#    #+#             */
-/*   Updated: 2021/08/29 22:46:00 by skienzle         ###   ########.fr       */
+/*   Updated: 2021/08/30 12:51:47 by skienzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,97 +14,96 @@
 
 #include <stdio.h>
 
-static int	ft_search_nl(char *buffer)
+static size_t	ft_search_nl(char *rest)
 {
 	int		i;
 
 	i = 0;
-	while (buffer[i])
+	while (rest[i])
 	{
-		if (buffer[i] == '\n')
+		if (rest[i] == '\n')
 			return (i);
 		i++;
 	}
 	return (i);
 }
 
-static char	*ft_append_buffer(char **rest, char *buffer)
+static int	ft_no_newline(char *rest)
+{
+	int	i;
+
+	if (rest == NULL)
+		return (1);
+	i = 0;
+	while (rest[i])
+	{
+		if (rest[i] == '\n')
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+static char	*ft_append_buffer(char *rest, char *buffer)
 {
 	char	*temp;
 
-	if (*rest)
+	if (rest)
 	{
-		temp = ft_strdup(*rest);
-		free(*rest);
-		*rest = ft_strjoin(temp, buffer);
+		temp = ft_strdup(rest);
+		free(rest);
+		rest = ft_strjoin(temp, buffer);
 		free(temp);
-		return (*rest);
+		return (rest);
 	}
-	else
+	return (ft_strdup(buffer));
+}
+
+static char	*ft_read_file(int fd, char *rest)
+{
+	char	*buffer;
+	ssize_t	num_bytes;
+
+	buffer = (char *)malloc(sizeof(*buffer) * (BUFFER_SIZE + 1));
+	if (buffer == NULL)
+		return (NULL);
+	while (ft_no_newline(rest))
 	{
-		return (ft_strdup(buffer));
+		num_bytes = read(fd, buffer, BUFFER_SIZE);
+		if (num_bytes == 0 || num_bytes == -1)
+			break ;
+		buffer[num_bytes] = '\0';
+		rest = ft_append_buffer(rest, buffer);
 	}
+	free(buffer);
+	if (num_bytes == -1)
+		return (NULL);
+	return (rest);
 }
 
 char	*get_next_line(int fd)
 {
-	char		*buffer;
 	static char	*rest;
 	char		*output;
-	ssize_t		bytes_read;
+	char		*temp;
 	size_t		nl;
 
 	if (fd < 0 || BUFFER_SIZE < 1)
 		return (NULL);
-	buffer = (char *)malloc(sizeof(*buffer) * (BUFFER_SIZE + 1));
-	if (buffer == NULL)
+	rest = ft_read_file(fd, rest);
+	if (rest == NULL)
 		return (NULL);
-	bytes_read = BUFFER_SIZE;
-	while (!ft_strchr_index(rest, '\n') && bytes_read > 0)
-	{
-		bytes_read = read(fd, buffer, BUFFER_SIZE);
-		if (bytes_read == -1)
-		{
-			free(buffer);
-			return (NULL);
-		}
-		buffer[bytes_read] = '\0';
-		rest = ft_append_buffer(&rest, buffer);
-	}
-	free(buffer);
 	nl = ft_search_nl(rest);
 	output = ft_substr(rest, 0, nl + 1);
-	buffer = ft_substr(rest, ft_strlen(output), ft_strlen(rest) - nl);
-	free(rest);
-	rest = ft_strdup(buffer);
-	free(buffer);
 	if (ft_strlen(output) == 0)
 	{
 		free(output);
 		free(rest);
 		return (NULL);
 	}
-	return(output);
+	temp = ft_substr(rest, nl + 1, ft_strlen(rest) - nl);
+	free(rest);
+	rest = ft_strdup(temp);
+	free(temp);
+	return (output);
 }
-/*
-#include <fcntl.h>
-
-int main(void)
-{
-	int		fd;
-	char	*reading;
-
-	fd = open("test_dracula.txt", 100);
-	reading = get_next_line(fd);
-	printf("%s", reading);
-	
-	while (reading)
-	{
-		reading = get_next_line(fd);
-		printf("%s", reading);
-	}
-	
-	close(fd);
-	return (0);
-}
-*/
