@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*   get_next_line_utils_bonus.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: skienzle <skienzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/22 15:32:04 by skienzle          #+#    #+#             */
-/*   Updated: 2021/08/29 21:05:46 by skienzle         ###   ########.fr       */
+/*   Updated: 2021/08/31 11:14:41 by skienzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 size_t	ft_strlen(const char *str)
 {
@@ -24,26 +24,14 @@ size_t	ft_strlen(const char *str)
 	return (len);
 }
 
-char	*ft_strchr(const char *str, int c)
-{
-	int		i;
-
-	i = 0;
-	if (!str)
-		return (NULL);
-	while (str[i] && (char)c != str[i])
-		i++;
-	if (str[i] == (char)c)
-		return ((char *)str + i);
-	return (NULL);
-}
-
 char	*ft_strdup(const char *str)
 {
 	size_t	len;
 	size_t	i;
 	char	*dest;
 
+	if (str == NULL)
+		return (NULL);
 	len = ft_strlen(str);
 	dest = (char *)malloc(len + 1);
 	if (!dest)
@@ -58,7 +46,7 @@ char	*ft_strdup(const char *str)
 	return (dest);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(const char *s1, const char *s2)
 {
 	size_t	i;
 	size_t	j;
@@ -82,13 +70,15 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	return (new);
 }
 
-char	*ft_substr(char const *s, unsigned int start, size_t len)
+char	*ft_substr(const char *s, unsigned int start, size_t len)
 {
 	size_t	i;
 	size_t	str_len;
 	char	*sub_str;
 
 	if (s == NULL)
+		return (NULL);
+	if (start >= ft_strlen(s))
 		return (NULL);
 	sub_str = (char *)malloc(len + 1);
 	if (sub_str == NULL)

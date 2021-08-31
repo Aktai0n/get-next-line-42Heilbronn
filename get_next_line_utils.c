@@ -6,7 +6,7 @@
 /*   By: skienzle <skienzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/22 15:32:04 by skienzle          #+#    #+#             */
-/*   Updated: 2021/08/30 12:44:29 by skienzle         ###   ########.fr       */
+/*   Updated: 2021/08/31 11:38:17 by skienzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,8 @@ char	*ft_substr(const char *s, unsigned int start, size_t len)
 	char	*sub_str;
 
 	if (s == NULL)
+		return (NULL);
+	if (start >= ft_strlen(s))
 		return (NULL);
 	sub_str = (char *)malloc(len + 1);
 	if (sub_str == NULL)

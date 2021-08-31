@@ -1,26 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: skienzle <skienzle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/22 15:31:59 by skienzle          #+#    #+#             */
-/*   Updated: 2021/08/31 11:36:14 by skienzle         ###   ########.fr       */
+/*   Updated: 2021/08/31 12:24:12 by skienzle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 #include <stdio.h>
 
 static size_t	ft_search_nl(char *rest)
 {
-	int		i;
+	size_t	i;
 
 	i = 0;
-	if (rest == NULL)
-		return (0);
 	while (rest[i])
 	{
 		if (rest[i] == '\n')
@@ -56,11 +54,6 @@ static char	*ft_append_buffer(char *rest, char *buffer)
 		free(rest);
 		rest = ft_strjoin(temp, buffer);
 		free(temp);
-		if (*rest == '\0')
-		{
-			free(rest);
-			rest = NULL;
-		}
 		return (rest);
 	}
 	return (ft_strdup(buffer));
@@ -90,21 +83,21 @@ static char	*ft_read_file(int fd, char *rest)
 
 char	*get_next_line(int fd)
 {
-	static char	*rest;
+	static char	*rest[4096];
 	char		*output;
 	char		*temp;
 	size_t		nl;
 
 	if (fd < 0 || BUFFER_SIZE < 1)
 		return (NULL);
-	rest = ft_read_file(fd, rest);
-	if (rest == NULL)
+	rest[fd] = ft_read_file(fd, rest[fd]);
+	if (rest[fd] == NULL)
 		return (NULL);
-	nl = ft_search_nl(rest);
-	output = ft_substr(rest, 0, nl + 1);
-	temp = ft_substr(rest, nl + 1, ft_strlen(rest) - nl);
-	free(rest);
-	rest = ft_strdup(temp);
+	nl = ft_search_nl(rest[fd]);
+	output = ft_substr(rest[fd], 0, nl + 1);
+	temp = ft_substr(rest[fd], nl + 1, ft_strlen(rest[fd]) - nl);
+	free(rest[fd]);
+	rest[fd] = ft_strdup(temp);
 	free(temp);
 	return (output);
 }
